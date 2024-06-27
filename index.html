@@ -1,40 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>My New Webpage</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 50px;
-        }
-        .option {
-            border: 1px solid #000;
-            padding: 20px;
-            width: 200px;
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PulsePals - Your Health Companion</title>
+        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <style>
+          /* Your existing CSS styles here */
+      
+          .option {
             text-align: center;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            background-color: #cfe2ff;
+            margin-bottom: 20px;
             cursor: pointer;
-        }
-    </style>
-</head>
+          }
+        </style>
+      </head>
+      
 <body>
-    <h1>Welcome to My New Webpage</h1>
-
     <div class="container">
+      <div class="header">
+        <h1>PulsePals - Your Health Companion</h1>
+        <p>Choose an option below:</p>
+      </div>
+      
+      <div class="content">
         <div id="fullDayLog" class="option">
-            <h2>Full Day Log</h2>
-            <p>Click here to view your full day log.</p>
+          <h2>Full Day Log</h2>
+          <p>Click here to view your full day log.</p>
         </div>
+  
 
-        <div id="moodTracker" class="option">
-            <h2>Mood Tracker</h2>
-            <p>Click here to view your mood tracker.</p>
+      <div id="moodTracker" class="option">
+        <h2>Mood Tracker</h2>
+        <p>Click here to view your mood tracker.</p>
         </div>
+      </div>
     </div>
-
+    
     <script>
         document.getElementById('fullDayLog').addEventListener('click', function() {
             window.location.href = 'https://ppheartrate-5im9qopxv-anqis-projects-d8885076.vercel.app/';
