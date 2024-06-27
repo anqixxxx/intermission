@@ -1,55 +1,111 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PulsePals - Your Health Companion</title>
-        <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <style>
-          /* Your existing CSS styles here */
-      
-          .option {
-            text-align: center;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-            background-color: #cfe2ff;
-            margin-bottom: 20px;
-            cursor: pointer;
-          }
-        </style>
-      </head>
-      
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulsePals - Your Health Companion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 150px;
+      margin-bottom: 10px;
+    }
+    .header h1 {
+      font-family: 'Times New Roman', Times, serif;
+      color: #003366;
+    }
+    .header p {
+      font-size: 1.2em;
+      color: #666;
+      font-family: 'Great Vibes', cursive;
+    }
+    .content {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .option {
+      text-align: center;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      background-color: #cfe2ff;
+      margin-bottom: 20px;
+      cursor: pointer;
+    }
+    .option h2 {
+      color: #003366;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.5em;
+    }
+    .option p {
+      color: #333;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      width: calc(100% - 40px);
+      max-width: 500px;
+      background-color: #003366;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      border: none;
+      transition: background-color 0.3s ease;
+      text-align: center;
+      margin: 0 auto;
+    }
+    .btn:hover {
+      background-color: #001a33;
+    }
+  </style>
+</head>
 <body>
     <div class="container">
       <div class="header">
+        &#10084; <!-- Heart Icon -->
         <h1>PulsePals - Your Health Companion</h1>
         <p>Choose an option below:</p>
       </div>
-      
       <div class="content">
-        <div id="fullDayLog" class="option">
+        <div id="fullDayLog" class="option" onclick="navigateToFullDayLog()">
           <h2>Full Day Log</h2>
-          <p>Click here to view your full day log.</p>
+          <p>Click here to enter your full day log.</p>
         </div>
-  
-
-      <div id="moodTracker" class="option">
-        <h2>Mood Tracker</h2>
-        <p>Click here to view your mood tracker.</p>
+        <div id="moodTracker" class="option" onclick="navigateToMoodTracker()">
+          <h2>Mood Tracker</h2>
+          <p>Click here to log your mood.</p>
         </div>
       </div>
     </div>
-    
-    <script>
-        document.getElementById('fullDayLog').addEventListener('click', function() {
-            window.location.href = 'https://ppheartrate-5im9qopxv-anqis-projects-d8885076.vercel.app/';
-        });
 
-        document.getElementById('moodTracker').addEventListener('click', function() {
-            window.location.href = 'https://mood-rl2n8z4q7-anqis-projects-d8885076.vercel.app/';
-        });
+    <script>
+      function navigateToFullDayLog() {
+        window.location.href = 'https://ppheartrate-5im9qopxv-anqis-projects-d8885076.vercel.app/';
+      }
+
+      function navigateToMoodTracker() {
+        window.location.href = 'https://mood-rl2n8z4q7-anqis-projects-d8885076.vercel.app/';
+      }
+
     </script>
 </body>
 </html>
