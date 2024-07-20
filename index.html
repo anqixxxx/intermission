@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
       background-color: #ffffff;
+      position: relative;
     }
     .container {
       max-width: 1200px;
@@ -84,9 +85,42 @@
       font-size: 1.2em;
       color: #333;
     }
+    .user-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #003366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    .user-icon:hover .tooltip {
+      display: block;
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: #003366;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
   </style>
 </head>
 <body>
+  <div class="user-icon" id="userIcon">
+    <span class="glyphicon glyphicon-user"></span>
+    <div class="tooltip" id="userTooltip"></div>
+  </div>
   <div class="container">
     <div class="header">
       &#10084; <!-- Heart Icon -->
@@ -135,7 +169,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
       authDomain: "pulsepals-c211c.firebaseapp.com",
@@ -146,8 +183,18 @@
       measurementId: "G-YPSX5VFFG5"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const email = user.email;
+        const tooltip = document.getElementById('userTooltip');
+        tooltip.textContent = email;
+      } else {
+        window.location.href = 'https://intermission-blue.vercel.app/authentication';
+      }
+    });
   </script>
 </body>
 </html>
-
