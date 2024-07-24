@@ -100,9 +100,6 @@
       font-size: 1.5em;
       cursor: pointer;
     }
-    .user-icon:hover .tooltip {
-      display: block;
-    }
     .tooltip {
       display: none;
       position: absolute;
@@ -114,12 +111,15 @@
       border-radius: 5px;
       white-space: nowrap;
     }
+    .user-icon:hover .tooltip {
+      display: block;
+    }
   </style>
 </head>
 <body>
   <div class="user-icon" id="userIcon">
     <span class="glyphicon glyphicon-user"></span>
-    <div class="tooltip" id="userTooltip"></div>
+    <div class="tooltip" id="userTooltip">Not logged in</div>
   </div>
   <div class="container">
     <div class="header">
@@ -187,10 +187,12 @@
     const auth = getAuth(app);
 
     onAuthStateChanged(auth, (user) => {
+      const tooltip = document.getElementById('userTooltip');
       if (user) {
         const email = user.email;
-        const tooltip = document.getElementById('userTooltip');
         tooltip.textContent = email;
+      } else {
+        tooltip.textContent = 'Not logged in';
       }
     });
   </script>
