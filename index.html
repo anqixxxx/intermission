@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PulsePals - Login</title>
+  <title>PulsePals - Your Health Companion</title>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <style>
@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
       background-color: #ffffff;
+      position: relative;
     }
     .container {
       max-width: 1200px;
@@ -42,28 +43,22 @@
       text-align: center;
       margin-bottom: 30px;
     }
-    .form-container {
-      max-width: 400px;
-      margin: 0 auto;
+    .option {
+      text-align: center;
       padding: 20px;
       border-radius: 5px;
       box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
       background-color: #cfe2ff;
+      margin-bottom: 20px;
+      cursor: pointer;
     }
-    label {
-      display: block;
-      margin-bottom: 10px;
+    .option h2 {
       color: #003366;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.5em;
     }
-    input[type="email"],
-    input[type="password"],
-    input[type="number"] {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+    .option p {
+      color: #333;
     }
     .btn {
       display: inline-block;
@@ -78,44 +73,106 @@
       transition: background-color 0.3s ease;
       text-align: center;
       margin: 0 auto;
-      margin-bottom: 10px; /* Adjust as needed for spacing */
     }
     .btn:hover {
       background-color: #001a33;
     }
-    .error {
-      color: red;
-      margin-bottom: 15px;
+    .log-display {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .log-display p {
+      font-size: 1.2em;
+      color: #333;
+    }
+    .user-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #003366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    .user-icon:hover .tooltip {
+      display: block;
+    }
+    .tooltip {
+      display: none;
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background-color: #003366;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      white-space: nowrap;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="loginPage">
+  <div class="user-icon" id="userIcon">
+    <span class="glyphicon glyphicon-user"></span>
+    <div class="tooltip" id="userTooltip"></div>
+  </div>
+  <div class="container">
     <div class="header">
       &#10084; <!-- Heart Icon -->
-      <h1>PulsePals</h1>
-      <p>Your Health Companion</p>
+      <h1>PulsePals - Your Health Companion</h1>
+      <p>Choose an option below:</p>
     </div>
     <div class="content">
-      <div class="form-container">
-        <h2>Login to PulsePals</h2>
-        <div id="loginError" class="alert alert-danger" style="display:none;"></div>
-        <form id="loginForm">
-          <label for="email">Email:</label>
-          <input type="email" id="email" name="email" required><br><br>
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password" required><br><br>
-          <button type="submit" class="btn">Login</button>
-        </form>
-        <button type="button" id="googleLoginButton" class="btn btn-default btn-block">Log In with Google</button>
+      <div id="fullDayLog" class="option" onclick="navigateToFullDayLog()">
+        <h2>Full Day Log</h2>
+        <p>Click here to enter your full day log.</p>
+      </div>
+      <div id="moodTracker" class="option" onclick="navigateToMoodTracker()">
+        <h2>Mood Tracker</h2>
+        <p>Click here to log your mood.</p>
+      </div>
+      <div id="enterDailyLog" class="option" onclick="navigateToDailyLog()">
+        <h2>Enter Daily Log</h2>
+        <p>Click here to enter your daily log.</p>
+      </div>
+      <div id="viewPreviousLogs" class="option" onclick="navigateToViewLogs()">
+        <h2>View Previous Logs</h2>
+        <p>Click here to view your previous logs.</p>
       </div>
     </div>
   </div>
+
+  <script>
+    function navigateToFullDayLog() {
+      window.location.href = 'https://ppheartrate.vercel.app/';
+    }
+
+    function navigateToMoodTracker() {
+      window.location.href = 'https://mood-six-self.vercel.app/';
+    }
+
+    function navigateToDailyLog() {
+      window.location.href = 'https://dailylogform.vercel.app/';
+    }
+
+    function navigateToViewLogs() {
+      window.location.href = 'https://viewlogs.vercel.app/';
+    }
+  </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-    // Your web app's Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
       authDomain: "pulsepals-c211c.firebaseapp.com",
@@ -126,44 +183,14 @@
       measurementId: "G-YPSX5VFFG5"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    // Set auth persistence to LOCAL
-    setPersistence(auth, browserLocalPersistence).then(() => {
-        // Login form event listener
-        const loginForm = document.getElementById('loginForm');
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
-
-            signInWithEmailAndPassword(auth, email, password)
-              .then((userCredential) => {
-                // Signed in
-                window.location.href = 'https://intermission-blue.vercel.app/';
-              })
-              .catch((error) => {
-                const errorMessage = error.message;
-                document.getElementById('loginError').style.display = 'block';
-                document.getElementById('loginError').textContent = errorMessage;
-              });
-            });
-        })
-        .catch((error) => {
-            console.error(error);
-      // Handle errors
-    });
-
-    // Check auth state on page load
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, perform other actions here
-        console.log('User is signed in');
-      } else {
-        // User is signed out, perform other actions here
-        console.log('User is signed out');
+        const email = user.email;
+        const tooltip = document.getElementById('userTooltip');
+        tooltip.textContent = email;
       }
     });
   </script>
