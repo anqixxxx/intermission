@@ -128,62 +128,41 @@
     </div>
   </div>
 
-  <script>
-    function navigateToFullDayLog() {
-      window.location.href = 'https://ppheartrate.vercel.app/';
-    }
-
-    function navigateToMoodTracker() {
-      window.location.href = 'https://mood-six-self.vercel.app/';
-    }
-
-    function navigateToDailyLog() {
-      window.location.href = 'https://dailylogform.vercel.app/';
-    }
-
-    function navigateToViewLogs() {
-      window.location.href = 'https://viewlogs.vercel.app/';
-    }
-  </script>
-
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ", 
-      authDomain: "pulsepals-c211c.firebaseapp.com", 
-      projectId: "pulsepals-c211c", 
-      storageBucket: "pulsepals-c211c.appspot.com", 
-      messagingSenderId: "475129408953", 
-      appId: "1:475129408953:web:1913c2d4083c1452079a68", 
+      apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
+      authDomain: "pulsepals-c211c.firebaseapp.com",
+      projectId: "pulsepals-c211c",
+      storageBucket: "pulsepals-c211c.appspot.com",
+      messagingSenderId: "475129408953",
+      appId: "1:475129408953:web:1913c2d4083c1452079a68",
       measurementId: "G-YPSX5VFFG5"
     };
 
     // Initialize Firebase
-     firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      const email = user.email;
-      console.log("User is logged in: ", email);  // Log user email to console
+    auth.onAuthStateChanged((user) => {
       const userInfo = document.getElementById('userInfo');
-      userInfo.textContent = email;
-    } else {
-      console.log("No user is logged in.");  // Log when no user is logged in
-      const userInfo = document.getElementById('userInfo');
-      userInfo.textContent = "Not logged in";
-    }
-  });
+      if (user) {
+        const email = user.email;
+        userInfo.textContent = email;
+      } else {
+        userInfo.textContent = "Not logged in";
+      }
+    });
 
-  // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
-  window.onload = function() {
-    const userInfo = document.getElementById('userInfo');
-    if (userInfo.textContent === "Loading...") {
-      userInfo.textContent = "User information could not be loaded";
-    }
-  };
-</script>
+    // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
+    window.onload = function() {
+      const userInfo = document.getElementById('userInfo');
+      if (userInfo.textContent === "Loading...") {
+        userInfo.textContent = "User information could not be loaded";
+      }
+    };
+  </script>
 </body>
 </html>
