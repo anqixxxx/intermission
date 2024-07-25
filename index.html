@@ -172,9 +172,13 @@
             const email = user.email;
             console.log("User is logged in: ", email);
             userInfo.textContent = email;
+            sessionStorage.setItem('isLoggedIn', 'true');
+            sessionStorage.setItem('userEmail', email);
           } else {
             console.log("No user is logged in.");
             userInfo.textContent = "Not logged in";
+            sessionStorage.removeItem('isLoggedIn');
+            sessionStorage.removeItem('userEmail');
           }
         });
       })
@@ -182,11 +186,14 @@
         console.error("Error setting auth persistence:", error);
       });
 
-    // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
+    // Check session storage for login status on page load
     window.onload = function() {
       const userInfo = document.getElementById('userInfo');
-      if (userInfo.textContent === "Loading...") {
-        userInfo.textContent = "User information could not be loaded";
+      if (sessionStorage.getItem('isLoggedIn')) {
+        const email = sessionStorage.getItem('userEmail');
+        userInfo.textContent = email;
+      } else {
+        userInfo.textContent = "Not logged in";
       }
     };
   </script>
