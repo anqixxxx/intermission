@@ -182,6 +182,12 @@
         console.error("Error setting auth persistence:", error);
       });
 
+    // Prevent accidental form submissions or reloads
+    document.getElementById('loginForm')?.addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form reload
+      // Add login handling code here
+    });
+
     // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
     window.onload = function() {
       const userInfo = document.getElementById('userInfo');
