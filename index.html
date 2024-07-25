@@ -131,7 +131,10 @@
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-  <script>
+  <script type='module'>
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
+
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
       authDomain: "pulsepals-c211c.firebaseapp.com",
