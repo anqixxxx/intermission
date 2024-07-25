@@ -160,19 +160,6 @@
         });
     };
 
-    // Check auth state on page load
-    window.onload = () => {
-      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-          console.log("Firebase auth persistence set to LOCAL");
-          checkAuthState();
-        })
-        .catch((error) => {
-          console.error("Error setting auth persistence:", error);
-        });
-    };
-
-
     // Profile circle tooltip
     const profileCircle = document.getElementById('profileCircle');
     const profileTooltip = document.getElementById('profileTooltip');
