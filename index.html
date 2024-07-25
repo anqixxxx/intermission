@@ -114,6 +114,7 @@
     </div>
     <div class="profile" id="profileCircle">U</div>
     <div class="tooltip" id="profileTooltip">User Profile</div>
+    <div id="loadingSpinner" style="display: none; text-align: center;">Loading...</div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -136,6 +137,7 @@
 
     // Function to handle authentication check
     function checkAuthState() {
+      document.getElementById('loadingSpinner').style.display = 'block';
       auth.onAuthStateChanged((user) => {
         if (!user) {
           // If the user is not authenticated, redirect them to the login page
@@ -143,8 +145,7 @@
         }
       });
     }
-
-    // Check auth state on page load
+    
     window.onload = () => {
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
