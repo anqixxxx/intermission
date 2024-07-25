@@ -136,6 +136,7 @@
 
     // Set auth persistence and check auth state
     window.onload = () => {
+      console.log("Page loaded. Setting auth persistence.");
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
           console.log("Firebase auth persistence set to LOCAL");
