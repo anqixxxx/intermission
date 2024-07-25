@@ -12,6 +12,7 @@
       margin: 0;
       padding: 0;
       background-color: #ffffff;
+      position: relative;
     }
     .container {
       max-width: 1200px;
@@ -76,30 +77,20 @@
     .btn:hover {
       background-color: #001a33;
     }
-    .log-form {
-      text-align: center;
-      margin-top: 30px;
-    }
-    .log-form label,
-    .log-form input,
-    .log-form button {
-      display: block;
-      margin: 10px auto;
+    .user-info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background-color: #003366;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
       font-size: 1em;
+      text-align: center;
     }
     .log-display {
       text-align: center;
       margin-top: 20px;
-    }
-    .log-form h2 {
-      color: #003366;
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 1.5em;
-    }
-    .log-form label,
-    .log-form input,
-    .log-form button {
-      font-size: 1.2em;
     }
     .log-display p {
       font-size: 1.2em;
@@ -108,6 +99,9 @@
   </style>
 </head>
 <body>
+  <div class="user-info" id="userInfo">
+    <span id="userEmail">Loading...</span>
+  </div>
   <div class="container">
     <div class="header">
       &#10084; <!-- Heart Icon -->
@@ -123,84 +117,78 @@
         <h2>Mood Tracker</h2>
         <p>Click here to log your mood.</p>
       </div>
-    </div>
-    <div class="log-form">
-      <h2>View Full Day Log</h2>
-      <form id="logForm">
-        <label for="date">Date:</label><br>
-        <input type="date" id="date" name="date"><br>
-        <button type="button" class="btn" onclick="viewLog()">View Log</button>
-      </form>
-      <div id="logDisplay" class="log-display"></div>
+      <div id="enterDailyLog" class="option" onclick="navigateToDailyLog()">
+        <h2>Enter Daily Log</h2>
+        <p>Click here to enter your daily log.</p>
+      </div>
+      <div id="viewPreviousLogs" class="option" onclick="navigateToViewLogs()">
+        <h2>View Previous Logs</h2>
+        <p>Click here to view your previous logs.</p>
+      </div>
     </div>
   </div>
-
+  
   <script>
     function navigateToFullDayLog() {
       window.location.href = 'https://ppheartrate.vercel.app/';
     }
-
     function navigateToMoodTracker() {
       window.location.href = 'https://mood-six-self.vercel.app/';
     }
-
-    function viewLog() {
-      const date = document.getElementById('date').value;
-      if (!date) {
-        alert('Please select a date');
-        return;
-      }
-
-      // Fetch and display log data from Firestore
-      const user = firebase.auth().currentUser;
-      if (user) {
-        const db = firebase.firestore();
-        db.collection('users').doc(user.uid).collection('health_logs')
-          .where('date', '==', date)
-          .get()
-          .then(querySnapshot => {
-            const logDisplay = document.getElementById('logDisplay');
-            logDisplay.innerHTML = '';
-            if (querySnapshot.empty) {
-              logDisplay.innerHTML = '<p>No logs found for this date.</p>';
-            } else {
-              querySnapshot.forEach(doc => {
-                const log = doc.data();
-                logDisplay.innerHTML += `
-                  <p>Heart Rate: ${log.heartRate}</p>
-                  <p>Steps Taken: ${log.stepsTaken}</p>
-                  <p>Mood: ${log.mood}</p>
-                  <p>Sleep Hours: ${log.sleepHours}</p>
-                  <hr>
-                `;
-              });
-            }
-          })
-          .catch(error => {
-            console.error('Error fetching logs:', error);
-          });
-      } else {
-        alert('No user signed in');
-      }
+    function navigateToDailyLog() {
+      window.location.href = 'https://dailylogform.vercel.app/';
+    }
+    function navigateToViewLogs() {
+      window.location.href = 'https://viewlogs.vercel.app/';
     }
   </script>
 
   <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> 
+
   <script>
     const firebaseConfig = {
-      apiKey: "AIzaSyDf4yaXsG9ShvlAX4IVdGIPqPAypttqlPI",
-      authDomain: "pulsepals-fa684.firebaseapp.com",
-      projectId: "pulsepals-fa684",
-      storageBucket: "pulsepals-fa684.appspot.com",
-      messagingSenderId: "332323808828",
-      appId: "1:332323808828:web:926868c9d76ab22a8ac539",
-      measurementId: "G-ZLJM10C0BD" 
+      apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
+      authDomain: "pulsepals-c211c.firebaseapp.com",
+      projectId: "pulsepals-c211c",
+      storageBucket: "pulsepals-c211c.appspot.com",
+      messagingSenderId: "475129408953",
+      appId: "1:475129408953:web:1913c2d4083c1452079a68",
+      measurementId: "G-YPSX5VFFG5"
     };
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        // Auth state is now persisted
+        console.log("Firebase auth persistence set to LOCAL");
+
+        firebase.auth().onAuthStateChanged((user) => {
+          const userInfo = document.getElementById('userInfo');
+          if (user) {
+            const email = user.email;
+            console.log("User is logged in: ", email);
+            userInfo.textContent = email;
+          } else {
+            console.log("No user is logged in.");
+            userInfo.textContent = "Not logged in";
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error setting auth persistence:", error);
+      });
+
+    // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
+    window.onload = function() {
+      const userInfo = document.getElementById('userInfo');
+      if (userInfo.textContent === "Loading...") {
+        userInfo.textContent = "User information could not be loaded";
+      }
+    };
   </script>
 </body>
 </html>
