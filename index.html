@@ -54,72 +54,100 @@
     }
     .option h2 {
       color: #003366;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.5em;
+    }
+    .option p {
+      color: #333;
     }
     .btn {
       display: inline-block;
       padding: 10px 20px;
+      width: calc(100% - 40px);
+      max-width: 500px;
       background-color: #003366;
       color: #fff;
       text-decoration: none;
       border-radius: 5px;
+      border: none;
       transition: background-color 0.3s ease;
+      text-align: center;
+      margin: 0 auto;
     }
     .btn:hover {
       background-color: #001a33;
     }
-    .profile {
+    .user-info {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #003366;
-      color: #fff;
-      padding: 10px;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .tooltip {
-      position: absolute;
-      top: 60px;
-      right: 10px;
+      top: 20px;
+      right: 20px;
       background-color: #003366;
       color: #fff;
       padding: 10px;
       border-radius: 5px;
-      display: none;
+      font-size: 1em;
       text-align: center;
+    }
+    .log-display {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .log-display p {
+      font-size: 1.2em;
+      color: #333;
     }
   </style>
 </head>
 <body>
+  <div class="user-info" id="userInfo">
+    <span id="userEmail">Loading...</span>
+  </div>
   <div class="container">
     <div class="header">
       &#10084; <!-- Heart Icon -->
-      <h1>PulsePals</h1>
-      <p>Your Health Companion</p>
+      <h1>PulsePals - Your Health Companion</h1>
+      <p>Choose an option below:</p>
     </div>
     <div class="content">
-      <div class="option">
-        <h2>Enter Daily Log</h2>
-        <a href="#" class="btn">Enter Log</a>
+      <div id="fullDayLog" class="option" onclick="navigateToFullDayLog()">
+        <h2>Full Day Log</h2>
+        <p>Click here to enter your full day log.</p>
       </div>
-      <div class="option">
+      <div id="moodTracker" class="option" onclick="navigateToMoodTracker()">
+        <h2>Mood Tracker</h2>
+        <p>Click here to log your mood.</p>
+      </div>
+      <div id="enterDailyLog" class="option" onclick="navigateToDailyLog()">
+        <h2>Enter Daily Log</h2>
+        <p>Click here to enter your daily log.</p>
+      </div>
+      <div id="viewPreviousLogs" class="option" onclick="navigateToViewLogs()">
         <h2>View Previous Logs</h2>
-        <a href="#" class="btn">View Logs</a>
+        <p>Click here to view your previous logs.</p>
       </div>
     </div>
-    <div class="profile" id="profileCircle">U</div>
-    <div class="tooltip" id="profileTooltip">User Profile</div>
   </div>
-
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  
   <script>
-    // Your web app's Firebase configuration
+    function navigateToFullDayLog() {
+      window.location.href = 'https://ppheartrate.vercel.app/';
+    }
+    function navigateToMoodTracker() {
+      window.location.href = 'https://mood-six-self.vercel.app/';
+    }
+    function navigateToDailyLog() {
+      window.location.href = 'https://dailylogform.vercel.app/';
+    }
+    function navigateToViewLogs() {
+      window.location.href = 'https://viewlogs.vercel.app/';
+    }
+  </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> 
+
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
       authDomain: "pulsepals-c211c.firebaseapp.com",
@@ -132,29 +160,63 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
 
-    // Check auth state on page load
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("User is logged in:", user.email);
-        const profileCircle = document.getElementById('profileCircle');
-        profileCircle.textContent = user.email.charAt(0).toUpperCase();
-      } else {
-        console.log("No user is logged in.");
-        window.location.href = 'https://get-started.vercel.app/';
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        // Auth state is now persisted
+        console.log("Firebase auth persistence set to LOCAL");
+
+        firebase.auth().onAuthStateChanged((user) => {
+          const userInfo = document.getElementById('userInfo');
+          if (user) {
+            const email = user.email;
+            console.log("User is logged in: ", email);
+            userInfo.textContent = email;
+          } else {
+            console.log("No user is logged in.");
+            userInfo.textContent = "Not logged in";
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("Error setting auth persistence:", error);
+      });
+
+    // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
+    window.onload = function() {
+      const userInfo = document.getElementById('userInfo');
+      if (userInfo.textContent === "Loading...") {
+        userInfo.textContent = "User information could not be loaded";
       }
-    });
-
-    // Profile circle tooltip
-    const profileCircle = document.getElementById('profileCircle');
-    const profileTooltip = document.getElementById('profileTooltip');
-    profileCircle.addEventListener('mouseover', () => {
-      profileTooltip.style.display = 'block';
-    });
-    profileCircle.addEventListener('mouseout', () => {
-      profileTooltip.style.display = 'none';
-    });
+    };
   </script>
+
+  <script>
+  // Initial check for current user
+  window.onload = () => {
+    const user = auth.currentUser;
+    if (user) {
+      console.log("Initial check: User is logged in:", user.email);
+      const profileCircle = document.getElementById('profileCircle');
+      profileCircle.textContent = user.email.charAt(0).toUpperCase();
+    } else {
+      console.log("Initial check: No user is logged in.");
+      window.location.href = 'https://get-started.vercel.app/';
+    }
+  };
+
+  // Real-time auth state listener
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      console.log("Auth state change: User is logged in:", user.email);
+      const profileCircle = document.getElementById('profileCircle');
+      profileCircle.textContent = user.email.charAt(0).toUpperCase();
+    } else {
+      console.log("Auth state change: No user is logged in.");
+      window.location.href = 'https://get-started.vercel.app/';
+    }
+  });
+</script>
+
 </body>
 </html>
