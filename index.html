@@ -145,48 +145,50 @@
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<script>
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
-    authDomain: "pulsepals-c211c.firebaseapp.com",
-    projectId: "pulsepals-c211c",
-    storageBucket: "pulsepals-c211c.appspot.com",
-    messagingSenderId: "475129408953",
-    appId: "1:475129408953:web:1913c2d4083c1452079a68",
-    measurementId: "G-YPSX5VFFG5"
-  };
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> 
 
-  // Initialize Firebase
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
+      authDomain: "pulsepals-c211c.firebaseapp.com",
+      projectId: "pulsepals-c211c",
+      storageBucket: "pulsepals-c211c.appspot.com",
+      messagingSenderId: "475129408953",
+      appId: "1:475129408953:web:1913c2d4083c1452079a68",
+      measurementId: "G-YPSX5VFFG5"
+    };
 
-  // Check auth token and redirect if needed
-  document.addEventListener('DOMContentLoaded', function() {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      // Verify Token
-      fetch('https://www.googleapis.com/identitytoolkit/v3/relyingparty/getAccountInfo?key=YOUR_API_KEY', {
-        method: 'POST',
-        body: JSON.stringify({ idToken: token }),
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .then(() => {
+        // Auth state is now persisted
+        console.log("Firebase auth persistence set to LOCAL");
+
+        firebase.auth().onAuthStateChanged((user) => {
+          const userInfo = document.getElementById('userInfo');
+          if (user) {
+            const email = user.email;
+            console.log("User is logged in: ", email);
+            userInfo.textContent = email;
+          } else {
+            console.log("No user is logged in.");
+            userInfo.textContent = "Not logged in";
+          }
+        });
       })
-      .then(response => response.json())
-      .then(data => {
-        if (data.users && data.users.length > 0) {
-          document.getElementById('userInfo').textContent = `Welcome, ${data.users[0].email}`;
-        } else {
-          document.getElementById('userInfo').textContent = "Not logged in";
-        }
-      })
-      .catch(error => {
-        console.error('Token Verification Error:', error);
-        document.getElementById('userInfo').textContent = "Not logged in";
+      .catch((error) => {
+        console.error("Error setting auth persistence:", error);
       });
-    } else {
-      document.getElementById('userInfo').textContent = "Not logged in";
-    }
-  });
-</script>
+
+    // Optional: Add a fallback to handle cases where Firebase takes longer to initialize
+    window.onload = function() {
+      const userInfo = document.getElementById('userInfo');
+      if (userInfo.textContent === "Loading...") {
+        userInfo.textContent = "User information could not be loaded";
+      }
+    };
+  </script>
 </body>
 </html>
