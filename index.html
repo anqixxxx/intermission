@@ -137,12 +137,8 @@
     // Function to handle authentication check
     function checkAuthState() {
       auth.onAuthStateChanged((user) => {
-        if (user) {
-          console.log("Auth state change: User is logged in:", user.email);
-          const profileCircle = document.getElementById('profileCircle');
-          profileCircle.textContent = user.email.charAt(0).toUpperCase();
-        } else {
-          console.log("Auth state change: No user is logged in.");
+        if (!user) {
+          // If the user is not authenticated, redirect them to the login page
           window.location.href = 'https://getstarted-page.vercel.app';
         }
       });
