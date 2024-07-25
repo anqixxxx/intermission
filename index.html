@@ -114,7 +114,6 @@
     </div>
     <div class="profile" id="profileCircle">U</div>
     <div class="tooltip" id="profileTooltip">User Profile</div>
-    <div id="loadingSpinner" style="display: none; text-align: center;">Loading...</div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -135,22 +134,22 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Function to handle authentication check
-    function checkAuthState() {
-      document.getElementById('loadingSpinner').style.display = 'block';
-      auth.onAuthStateChanged((user) => {
-        if (!user) {
-          // If the user is not authenticated, redirect them to the login page
-          window.location.href = 'https://getstarted-page.vercel.app';
-        }
-      });
-    }
-    
+    // Set auth persistence and check auth state
     window.onload = () => {
       auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
         .then(() => {
           console.log("Firebase auth persistence set to LOCAL");
-          checkAuthState();
+          auth.onAuthStateChanged((user) => {
+            if (user) {
+              console.log("Auth state change: User is logged in:", user.email);
+              const profileCircle = document.getElementById('profileCircle');
+              profileCircle.textContent = user.email.charAt(0).toUpperCase();
+              // Stop redirection since user is authenticated
+            } else {
+              console.log("Auth state change: No user is logged in.");
+              window.location.href = 'https://getstarted-page.vercel.app';
+            }
+          });
         })
         .catch((error) => {
           console.error("Error setting auth persistence:", error);
