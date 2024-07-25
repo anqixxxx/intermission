@@ -130,10 +130,9 @@
 
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
-  <script type='module'>
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js";
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script> 
+  
+  <script>
 
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
@@ -146,11 +145,10 @@
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    auth.onAuthStateChanged((user) => {
-      const userInfo = document.getElementById('userInfo');
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         const email = user.email;
         userInfo.textContent = email;
