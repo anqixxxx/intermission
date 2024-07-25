@@ -12,7 +12,6 @@
       margin: 0;
       padding: 0;
       background-color: #ffffff;
-      position: relative;
     }
     .container {
       max-width: 1200px;
@@ -54,44 +53,57 @@
     }
     .option h2 {
       color: #003366;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.5em;
+    }
+    .option p {
+      color: #333;
     }
     .btn {
       display: inline-block;
       padding: 10px 20px;
+      width: calc(100% - 40px);
+      max-width: 500px;
       background-color: #003366;
       color: #fff;
       text-decoration: none;
       border-radius: 5px;
+      border: none;
       transition: background-color 0.3s ease;
+      text-align: center;
+      margin: 0 auto;
     }
     .btn:hover {
       background-color: #001a33;
     }
-    .profile {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #003366;
-      color: #fff;
-      padding: 10px;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    .tooltip {
-      position: absolute;
-      top: 60px;
-      right: 10px;
-      background-color: #003366;
-      color: #fff;
-      padding: 10px;
-      border-radius: 5px;
-      display: none;
+    .log-form {
       text-align: center;
+      margin-top: 30px;
+    }
+    .log-form label,
+    .log-form input,
+    .log-form button {
+      display: block;
+      margin: 10px auto;
+      font-size: 1em;
+    }
+    .log-display {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .log-form h2 {
+      color: #003366;
+      font-family: 'Times New Roman', Times, serif;
+      font-size: 1.5em;
+    }
+    .log-form label,
+    .log-form input,
+    .log-form button {
+      font-size: 1.2em;
+    }
+    .log-display p {
+      font-size: 1.2em;
+      color: #333;
     }
   </style>
 </head>
@@ -99,90 +111,96 @@
   <div class="container">
     <div class="header">
       &#10084; <!-- Heart Icon -->
-      <h1>PulsePals</h1>
-      <p>Your Health Companion</p>
+      <h1>PulsePals - Your Health Companion</h1>
+      <p>Choose an option below:</p>
     </div>
     <div class="content">
-      <div class="option">
-        <h2>Enter Daily Log</h2>
-        <a href="#" class="btn">Enter Log</a>
+      <div id="fullDayLog" class="option" onclick="navigateToFullDayLog()">
+        <h2>Full Day Log</h2>
+        <p>Click here to enter your full day log.</p>
       </div>
-      <div class="option">
-        <h2>View Previous Logs</h2>
-        <a href="#" class="btn">View Logs</a>
+      <div id="moodTracker" class="option" onclick="navigateToMoodTracker()">
+        <h2>Mood Tracker</h2>
+        <p>Click here to log your mood.</p>
       </div>
     </div>
-    <div class="profile" id="profileCircle">U</div>
-    <div class="tooltip" id="profileTooltip">User Profile</div>
+    <div class="log-form">
+      <h2>View Full Day Log</h2>
+      <form id="logForm">
+        <label for="date">Date:</label><br>
+        <input type="date" id="date" name="date"><br>
+        <button type="button" class="btn" onclick="viewLog()">View Log</button>
+      </form>
+      <div id="logDisplay" class="log-display"></div>
+    </div>
   </div>
 
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
   <script>
-    // Your web app's Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
-      authDomain: "pulsepals-c211c.firebaseapp.com",
-      projectId: "pulsepals-c211c",
-      storageBucket: "pulsepals-c211c.appspot.com",
-      messagingSenderId: "475129408953",
-      appId: "1:475129408953:web:1913c2d4083c1452079a68",
-      measurementId: "G-YPSX5VFFG5"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-
-    // Set auth persistence and check auth state
-    window.onload = () => {
-      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-          console.log("Firebase auth persistence set to LOCAL");
-          auth.onAuthStateChanged((user) => {
-            if (user) {
-              console.log("Auth state change: User is logged in:", user.email);
-              const profileCircle = document.getElementById('profileCircle');
-              profileCircle.textContent = user.email.charAt(0).toUpperCase();
-            } else {
-              console.log("Auth state change: No user is logged in.");
-              // Prompt user to sign in if not logged in
-              signInWithPopup();
-            }
-          });
-        })
-        .catch((error) => {
-          console.error("Error setting auth persistence:", error);
-        });
-    };
-
-    // Function to sign in using popup
-    function signInWithPopup() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithPopup(provider)
-        .then((result) => {
-          // Signed in
-          console.log("User signed in: ", result.user.email);
-          // Update profile circle
-          const profileCircle = document.getElementById('profileCircle');
-          profileCircle.textContent = result.user.email.charAt(0).toUpperCase();
-        })
-        .catch((error) => {
-          console.error("Error during sign-in:", error);
-          // Optionally handle sign-in errors here
-        });
+    function navigateToFullDayLog() {
+      window.location.href = 'https://ppheartrate.vercel.app/';
     }
 
-    // Profile circle tooltip
-    const profileCircle = document.getElementById('profileCircle');
-    const profileTooltip = document.getElementById('profileTooltip');
-    profileCircle.addEventListener('mouseover', () => {
-      profileTooltip.style.display = 'block';
-    });
-    profileCircle.addEventListener('mouseout', () => {
-      profileTooltip.style.display = 'none';
-    });
+    function navigateToMoodTracker() {
+      window.location.href = 'https://mood-six-self.vercel.app/';
+    }
+
+    function viewLog() {
+      const date = document.getElementById('date').value;
+      if (!date) {
+        alert('Please select a date');
+        return;
+      }
+
+      // Fetch and display log data from Firestore
+      const user = firebase.auth().currentUser;
+      if (user) {
+        const db = firebase.firestore();
+        db.collection('users').doc(user.uid).collection('health_logs')
+          .where('date', '==', date)
+          .get()
+          .then(querySnapshot => {
+            const logDisplay = document.getElementById('logDisplay');
+            logDisplay.innerHTML = '';
+            if (querySnapshot.empty) {
+              logDisplay.innerHTML = '<p>No logs found for this date.</p>';
+            } else {
+              querySnapshot.forEach(doc => {
+                const log = doc.data();
+                logDisplay.innerHTML += `
+                  <p>Heart Rate: ${log.heartRate}</p>
+                  <p>Steps Taken: ${log.stepsTaken}</p>
+                  <p>Mood: ${log.mood}</p>
+                  <p>Sleep Hours: ${log.sleepHours}</p>
+                  <hr>
+                `;
+              });
+            }
+          })
+          .catch(error => {
+            console.error('Error fetching logs:', error);
+          });
+      } else {
+        alert('No user signed in');
+      }
+    }
+  </script>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-firestore.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDf4yaXsG9ShvlAX4IVdGIPqPAypttqlPI",
+      authDomain: "pulsepals-fa684.firebaseapp.com",
+      projectId: "pulsepals-fa684",
+      storageBucket: "pulsepals-fa684.appspot.com",
+      messagingSenderId: "332323808828",
+      appId: "1:332323808828:web:926868c9d76ab22a8ac539",
+      measurementId: "G-ZLJM10C0BD" 
+    };
+
+    firebase.initializeApp(firebaseConfig);
   </script>
 </body>
 </html>
-
