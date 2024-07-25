@@ -134,30 +134,31 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Initial check for current user
-    window.onload = () => {
-      const user = auth.currentUser;
-      if (user) {
-        console.log("Initial check: User is logged in:", user.email);
-        const profileCircle = document.getElementById('profileCircle');
-        profileCircle.textContent = user.email.charAt(0).toUpperCase();
-      } else {
-        console.log("Initial check: No user is logged in.");
-        window.location.href = 'https://getstarted-page.vercel.app';
-      }
-    };
+    // Function to handle authentication check
+    function checkAuthState() {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          console.log("Auth state change: User is logged in:", user.email);
+          const profileCircle = document.getElementById('profileCircle');
+          profileCircle.textContent = user.email.charAt(0).toUpperCase();
+        } else {
+          console.log("Auth state change: No user is logged in.");
+          window.location.href = 'https://getstarted-page.vercel.app';
+        }
+      });
+    }
 
-    // Real-time auth state listener
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        console.log("Auth state change: User is logged in:", user.email);
-        const profileCircle = document.getElementById('profileCircle');
-        profileCircle.textContent = user.email.charAt(0).toUpperCase();
-      } else {
-        console.log("Auth state change: No user is logged in.");
-        window.location.href = 'https://getstarted-page.vercel.app';
-      }
-    });
+    // Check auth state on page load
+    window.onload = () => {
+      auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(() => {
+          console.log("Firebase auth persistence set to LOCAL");
+          checkAuthState();
+        })
+        .catch((error) => {
+          console.error("Error setting auth persistence:", error);
+        });
+    };
 
     // Profile circle tooltip
     const profileCircle = document.getElementById('profileCircle');
