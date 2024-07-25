@@ -191,8 +191,10 @@
       const userInfo = document.getElementById('userInfo');
       if (sessionStorage.getItem('isLoggedIn')) {
         const email = sessionStorage.getItem('userEmail');
+        console.log("Session storage indicates user is logged in: ", email);
         userInfo.textContent = email;
       } else {
+        console.log("Session storage indicates no user is logged in.");
         userInfo.textContent = "Not logged in";
       }
     };
