@@ -121,105 +121,19 @@
         <h2>Enter Daily Log</h2>
         <p>Click here to enter your daily log.</p>
       </div>
-      <div id="viewPreviousLogs" class="option" onclick="navigateToViewLogs()">
-        <h2>View Previous Logs</h2>
-        <p>Click here to view your previous logs.</p>
-      </div>
     </div>
   </div>
 
   <script>
     function navigateToFullDayLog() {
-      redirectToPage('https://ppheartrate.vercel.app/');
+      window.location.href = 'https://ppheartrate.vercel.app/';
     }
     function navigateToMoodTracker() {
-      redirectToPage('https://mood-six-self.vercel.app/');
+      window.location.href = 'https://mood-six-self.vercel.app/';
     }
     function navigateToDailyLog() {
-      redirectToPage('https://dailylogform.vercel.app/');
+      window.location.href = 'https://dailylogform.vercel.app/';
     }
-    function navigateToViewLogs() {
-      redirectToPage('https://viewlogs.vercel.app/');
-    }
-
-    function redirectToPage(url) {
-      const idToken = sessionStorage.getItem('idToken');
-      const userId = sessionStorage.getItem('userId');
-      if (idToken && userId) {
-        const newUrl = `${url}?idToken=${encodeURIComponent(idToken)}&userId=${encodeURIComponent(userId)}`;
-        window.location.href = newUrl;
-      } else {
-        console.log('Error: User is not logged in.');
-        alert('Error: You are not logged in. Please log in to continue/');
-      }
-    }
-  </script>
-
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> 
-  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
-      authDomain: "pulsepals-c211c.firebaseapp.com",
-      projectId: "pulsepals-c211c",
-      storageBucket: "pulsepals-c211c.appspot.com",
-      messagingSenderId: "475129408953",
-      appId: "1:475129408953:web:1913c2d4083c1452079a68",
-      measurementId: "G-YPSX5VFFG5"
-    };
-
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-
-    async function authenticateUserWithToken(idToken, userId) {
-      try {
-        // Simulate signInWithCustomToken using signInWithCredential
-        const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
-        await auth.signInWithCredential(credential);
-        const user = auth.currentUser;
-
-        if (user) {
-          const token = await user.getIdTokenResult();
-          const claims = token.claims;
-
-          if (claims.admin) {
-            document.getElementById('userInfo').textContent = `Welcome ${user.email} (Admin)`;
-          } else {
-            document.getElementById('userInfo').textContent = `Welcome ${user.email}`;
-          }
-
-          // Retrieve user data from Firestore
-          const userDoc = await db.collection('users').doc(userId).get();
-          if (userDoc.exists) {
-            console.log('User data:', userDoc.data());
-            // You can use this data as needed in your application
-          } else {
-            console.log('No such document!');
-          }
-        }
-      } catch (error) {
-        console.error('Error authenticating with custom token:', error);
-      }
-    }
-
-    window.onload = function() {
-      // Get the query parameters from the URL
-      const idToken = sessionStorage.getItem('idToken');
-      const userId = sessionStorage.getItem('userId');
-
-      if (idToken && userId) {
-        authenticateUserWithToken(idToken, userId);
-      } else {
-        console.log('Error: User is not logged in.');
-        alert('Error: You are not logged in. Please log in to continue.');
-      }
-    };
   </script>
 </body>
 </html>
