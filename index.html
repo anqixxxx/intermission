@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -127,7 +128,7 @@
       </div>
     </div>
   </div>
-  
+
   <script>
     function navigateToFullDayLog() {
       window.location.href = 'https://ppheartrate.vercel.app/';
@@ -143,10 +144,11 @@
     }
   </script>
 
+
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> 
-
+  
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
@@ -160,45 +162,50 @@
 
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
 
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-      .then(() => {
-        // Auth state is now persisted
-        console.log("Firebase auth persistence set to LOCAL");
+    async function authenticateUserWithToken(idToken, userId) {
+      try {
+        // Simulate signInWithCustomToken using signInWithCredential
+        const credential = firebase.auth.GoogleAuthProvider.credential(idToken);
+        await auth.signInWithCredential(credential);
+        const user = auth.currentUser;
 
-        firebase.auth().onAuthStateChanged((user) => {
-          const userInfo = document.getElementById('userInfo');
-          if (user) {
-            const email = user.email;
-            console.log("User is logged in: ", email);
-            userInfo.textContent = email;
-            sessionStorage.setItem('isLoggedIn', 'true');
-            sessionStorage.setItem('userEmail', email);
+        if (user) {
+          const token = await user.getIdTokenResult();
+          const claims = token.claims;
+
+          if (claims.admin) {
+            document.getElementById('userInfo').textContent = `Welcome ${user.email} (Admin)`;
           } else {
-            console.log("No user is logged in.");
-            userInfo.textContent = "Not logged in";
-            sessionStorage.removeItem('isLoggedIn');
-            sessionStorage.removeItem('userEmail');
+            document.getElementById('userInfo').textContent = `Welcome ${user.email}`;
           }
-        });
-      })
-      .catch((error) => {
-        console.error("Error setting auth persistence:", error);
-      });
 
-    // Check session storage for login status on page load
+          // Retrieve user data from Firestore
+          const userDoc = await db.collection('users').doc(userId).get();
+          if (userDoc.exists) {
+            console.log('User data:', userDoc.data());
+            // You can use this data as needed in your application
+          } else {
+            console.log('No such document!');
+          }
+        }
+      } catch (error) {
+        console.error('Error authenticating with custom token:', error);
+      }
+    }
+
     window.onload = function() {
-      const userInfo = document.getElementById('userInfo');
-      if (sessionStorage.getItem('isLoggedIn')) {
-        const email = sessionStorage.getItem('userEmail');
-        console.log("Session storage indicates user is logged in: ", email);
-        userInfo.textContent = email;
+      const idToken = sessionStorage.getItem('idToken');
+      const userId = sessionStorage.getItem('userId');
+
+      if (idToken && userId) {
+        authenticateUserWithToken(idToken, userId);
       } else {
-        console.log("Session storage indicates no user is logged in.");
-        userInfo.textContent = "Not logged in";
+        document.getElementById('userInfo').textContent = 'Not logged in';
       }
     };
   </script>
 </body>
 </html>
-
