@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -131,16 +130,27 @@
 
   <script>
     function navigateToFullDayLog() {
-      window.location.href = 'https://ppheartrate.vercel.app/';
+      redirectToPage('https://ppheartrate.vercel.app/');
     }
     function navigateToMoodTracker() {
-      window.location.href = 'https://mood-six-self.vercel.app/';
+      redirectToPage('https://mood-six-self.vercel.app/');
     }
     function navigateToDailyLog() {
-      window.location.href = 'https://dailylogform.vercel.app/';
+      redirectToPage('https://dailylogform.vercel.app/');
     }
     function navigateToViewLogs() {
-      window.location.href = 'https://viewlogs.vercel.app/';
+      redirectToPage('https://viewlogs.vercel.app/');
+    }
+
+    function redirectToPage(url) {
+      const idToken = sessionStorage.getItem('idToken');
+      const userId = sessionStorage.getItem('userId');
+      if (idToken && userId) {
+        const newUrl = `${url}?idToken=${encodeURIComponent(idToken)}&userId=${encodeURIComponent(userId)}`;
+        window.location.href = newUrl;
+      } else {
+        window.location.href = 'https://loginnew.vercel.app/';
+      }
     }
   </script>
 
@@ -149,7 +159,7 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script> 
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyAo6ziHFthGBRE3cZd8EC-Ukds8ztyMzFQ",
@@ -198,13 +208,14 @@
     }
 
     window.onload = function() {
+      // Get the query parameters from the URL
       const idToken = sessionStorage.getItem('idToken');
       const userId = sessionStorage.getItem('userId');
 
       if (idToken && userId) {
         authenticateUserWithToken(idToken, userId);
       } else {
-        document.getElementById('userInfo').textContent = 'Not logged in';
+        window.location.href = 'https://loginnew.vercel.app/';
       }
     };
   </script>
