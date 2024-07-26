@@ -216,7 +216,8 @@
       if (idToken && userId) {
         authenticateUserWithToken(idToken, userId);
       } else {
-        window.location.href = 'https://loginnew.vercel.app/';
+        console.log('Error: User is not logged in.');
+        alert('Error: You are not logged in. Please log in to continue.');
       }
     };
   </script>
