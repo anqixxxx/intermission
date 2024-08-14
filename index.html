@@ -110,6 +110,10 @@
         <h2>Full Day Log</h2>
         <p>Click here to enter your full day log.</p>
       </div>
+      <div id="moodTracker" class="option" onclick="navigateToMoodTracker()">
+        <h2>Mood Tracker</h2>
+        <p>Click here to log your mood.</p>
+      </div>
       <div id="enterDailyLog" class="option" onclick="navigateToDailyLog()">
         <h2>Enter and View Log</h2>
         <p>Click here to enter and save your log.</p>
@@ -120,6 +124,9 @@
   <script>
     function navigateToFullDayLog() {
       window.location.href = 'https://ppheartrate.vercel.app/';
+    }
+    function navigateToMoodTracker() {
+      window.location.href = 'https://mood-six-self.vercel.app/';
     }
     function navigateToDailyLog() {
       window.location.href = 'https://dailylogform.vercel.app/';
